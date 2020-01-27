@@ -1,6 +1,6 @@
 """
 This is part of the code accompanying this article: 
-https://www.eventsorcery.com/posts/building-a-real-world-domain-model-python/
+https://www.eventsorcery.com/building-a-real-world-domain-model-python/
 
 Version 2 clarifies what a share class should be and creates a 
 relationship between it and the shares themselves. 

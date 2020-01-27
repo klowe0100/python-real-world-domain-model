@@ -1,6 +1,6 @@
 """
 This is part of the code accompanying this article: 
-https://www.eventsorcery.com/posts/building-a-real-world-domain-model-python/
+https://www.eventsorcery.com/building-a-real-world-domain-model-python/
 
 Version 4 adds a futher command and updates the tests to include 
 all of the domain expert's test data. 
