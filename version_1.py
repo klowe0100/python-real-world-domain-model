@@ -1,3 +1,12 @@
+"""
+This is part of the code accompanying this article: 
+https://www.eventsorcery.com/posts/building-a-real-world-domain-model-python/
+
+Version 1 deals with creating the initial entities and value objects in 
+the domain model based on the limited information provided by the domain
+expert. 
+"""
+
 from uuid import uuid4
 
 def get_repr(obj):
