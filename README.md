@@ -4,5 +4,5 @@ Building a domain model in code is a way to capture knowledge about how a busine
 
 ## Companion code
 
-This is the companion code to https://www.eventsorcery.com/posts/building-a-real-world-domain-model-python/.
+This is the companion code to https://www.eventsorcery.com/building-a-real-world-domain-model-python/.
 
