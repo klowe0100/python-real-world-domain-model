@@ -1,3 +1,14 @@
+"""
+This code accompanies my tutorial on improving a domain model
+by using a test driven development approach:
+
+https://www.eventsorcery.com/improving-ddd-model-with-tdd/
+
+2020 (c) Zarek Rahman 
+
+Licensed under GNU.
+"""
+
 from __future__ import annotations
 from typing import Any
 from datetime import datetime
