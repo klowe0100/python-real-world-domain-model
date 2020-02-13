@@ -3,10 +3,10 @@ from datetime import datetime
 from decimal import Decimal
 from domain_model import Person, Company, Officer, Shareholding, ShareClass
 
-class TestCompanyDomainModel(unittest.TestCase):
+class TestCompany(unittest.TestCase):
 
     def setUp(self):
-        self.company = Company.__create__(
+        self.company = Company.prepare_new(
           name="Company Limited", 
           registered_office="10 Downing Street, London",
           registered_office_country="England and Wales",
@@ -16,14 +16,14 @@ class TestCompanyDomainModel(unittest.TestCase):
           custom_articles=False,
           restricted_articles=False
         )
-        self.joris = Person.__create__(
+        self.joris = Person.involve(
             title="Mr",
             name="Joris Bohnson", 
             address="23 Fleet Street, London, EC4Y 1UJ",
             former_names = ["Chuck Norris", "Bruce Lee"],
             date_of_birth = "05/1962",
         )
-        self.tonald = Person.__create__(
+        self.tonald = Person.involve(
             title="Mr",
             name="Tonald Drump", 
             address="160 Pennsylvania Ave",
@@ -74,7 +74,7 @@ class TestCompanyDomainModel(unittest.TestCase):
             redeemable=False
         ) 
 
-    def test_person_creation(self):
+    def test_person_can_be_involved(self):
         self.assertIsInstance(self.joris.name, str)
         self.assertIsInstance(self.joris.address, str)
         self.assertIsInstance(self.joris.date_of_birth, str)
@@ -82,7 +82,7 @@ class TestCompanyDomainModel(unittest.TestCase):
         self.assertEqual(self.joris.address, "23 Fleet Street, London, EC4Y 1UJ")
         self.assertEqual(len(self.joris.former_names), 2)
         
-    def test_company_creation(self):
+    def test_new_company_can_be_prepared(self):
         self.assertIsInstance(self.company.name, str)
         self.assertIsInstance(self.company.registered_office, str)
         self.assertIsInstance(self.company.company_type, str)
@@ -96,6 +96,7 @@ class TestCompanyDomainModel(unittest.TestCase):
         self.assertTrue(self.company.model_articles)
         self.assertFalse(self.company.custom_articles)
         self.assertFalse(self.company.restricted_articles)
+        self.assertFalse(self.company.incorporated)
         
     def test_officers(self):
         self.company.add_officer(

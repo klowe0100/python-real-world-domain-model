@@ -22,13 +22,35 @@ class Person(AggregateRoot):
     # person will have certain events related only to them, controlling 
     # entities and objects that relate only to them. 
 
+    # We do not 'create' people within the context of a legal transaction.
+    # Instead, we would probably 'involve' one. By using a verb like 'involve' 
+    # rather than 'create' we move away from the CRUD based approach to something 
+    # that more closely mirrors what happens in the domain.
+
+    @classmethod
+    def involve(
+        cls,
+        title: str, 
+        name: str, 
+        address: str,
+        date_of_birth: str,
+        former_names: list = None,
+    ) -> Person:
+        return cls.__create__(
+            title=title, 
+            name=name, 
+            address=address, 
+            date_of_birth=date_of_birth, 
+            former_names=former_names
+        )
+
     def __init__(
         self, 
         title: str, 
         name: str, 
         address: str,
         date_of_birth: str,
-        former_names: list = None,
+        former_names: list,
         **kwargs: Any
     ) -> None:
         super().__init__(**kwargs)
@@ -74,8 +96,15 @@ class Company(AggregateRoot):
     class Event(AggregateRoot.Event):
         pass
 
-    def __init__(
-        self, 
+    # There is a distinction between preparing a company to be incorporated
+    # and actually incorporating it. As lawyers, before we actually incorporate
+    # a company for a client, we must first prepare it to be incorporated.
+    # By using a verb like 'prepare' rather than 'create' we move away from
+    # the CRUD based approach to something that more closely mirrors the domain.
+
+    @classmethod
+    def prepare_new(
+        cls,
         name: str, 
         registered_office: str, 
         registered_office_country: str = "England and Wales",
@@ -83,7 +112,29 @@ class Company(AggregateRoot):
         sic_code: int = 74990,
         model_articles: bool = True,
         custom_articles: bool = False,
-        restricted_articles: bool = False,
+        restricted_articles: bool = False
+    ) -> Company:
+        return cls.__create__(
+            name=name,
+            registered_office=registered_office,
+            registered_office_country=registered_office_country,
+            company_type=company_type,
+            sic_code=sic_code,
+            model_articles=model_articles,
+            custom_articles=custom_articles,
+            restricted_articles=restricted_articles
+        )
+
+    def __init__(
+        self, 
+        name: str, 
+        registered_office: str, 
+        registered_office_country: str,
+        company_type: str,
+        sic_code: int,
+        model_articles: bool,
+        custom_articles: bool,
+        restricted_articles: bool,
         **kwargs: Any
     ) -> None:
         super().__init__(**kwargs)
@@ -97,6 +148,7 @@ class Company(AggregateRoot):
         self._custom_articles = custom_articles
         self._restricted_articles = restricted_articles
         self._officers = []
+        self._incorporated = False
     
     def __repr__(self) -> str:
         return f"<Company(name='{self.name}', registered_office='{self.registered_office}', total_shareholdings={self.total_shareholdings}>"
@@ -132,6 +184,10 @@ class Company(AggregateRoot):
     @property
     def restricted_articles(self) -> bool:
         return self._restricted_articles
+
+    @property
+    def incorporated(self) -> bool:
+        return self._incorporated
 
     def add_officer(
         self, 
@@ -212,7 +268,6 @@ class Company(AggregateRoot):
                 "redeemable": share_class.redeemable
             }
         return results
-
 
     def issue_shares(
         self, 
