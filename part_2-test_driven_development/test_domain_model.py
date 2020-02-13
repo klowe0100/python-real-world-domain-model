@@ -166,11 +166,11 @@ class TestCompanyDomainModel(unittest.TestCase):
 
         statement = self.company.statement
         self.assertIsInstance(statement, dict)
-        self.assertEqual(statement['ordinary']['total_shares'], 286)
-        self.assertEqual(statement['ordinary']['aggregate_nominal_value'], Decimal("0.02")), 
-        self.assertEqual(statement['ordinary']['total_price_paid'], Decimal("121.01"))
-        self.assertEqual(statement['deferred']['total_shares'], 925)
-        self.assertEqual(statement['preference']['total_shares'], 2395)
+        self.assertEqual(statement['ordinary']['total_shares_issued'], 286)
+        self.assertEqual(statement['ordinary']['aggregate_nominal_value'], Decimal("2.86")), 
+        self.assertEqual(statement['ordinary']['total_price_paid'], Decimal("6173.35"))
+        self.assertEqual(statement['deferred']['total_shares_issued'], 925)
+        self.assertEqual(statement['preference']['total_shares_issued'], 2395)
         
 if __name__ == "__main__":
     unittest.main(exit=False)

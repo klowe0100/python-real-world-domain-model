@@ -201,8 +201,9 @@ class Company(AggregateRoot):
         for share_class_name, share_class in self._share_classes.items():
             results[share_class_name] = {
                 "currency": share_class.currency,
-                "total_shares": share_class.total_number_of_shares,
-                "aggregate_nominal_value": share_class.aggregate_nominal_value,
+                "total_shares_issued": share_class.total_number_of_shares,
+                "nominal_value_per_share": share_class.nominal_value_per_share,
+                "aggregate_nominal_value": share_class.nominal_value_per_share * share_class.total_number_of_shares,
                 "total_price_paid": share_class.total_price_paid,
                 "aggregate_amount_unpaid": share_class.aggregate_amount_unpaid,
                 "votes_per_share": share_class.votes_per_share,
@@ -434,14 +435,14 @@ class ShareClass(object):
     def total_price_paid(self):
         total = Decimal("0.00")
         for shareholding in self._shareholdings:
-            total += Decimal(shareholding.price_paid_per_share)
+            total += Decimal(shareholding.price_paid_per_share) * Decimal(shareholding.number_of_shares)
         return total
 
     @property
     def aggregate_amount_unpaid(self):
         total = Decimal("0.00")
         for shareholding in self._shareholdings:
-            total += Decimal(shareholding.unpaid_per_share)
+            total += Decimal(shareholding.unpaid_per_share) * Decimal(shareholding.number_of_shares)
         return total
 
     def add_allotment(self, allotment):
@@ -504,72 +505,3 @@ class Shareholding(object):
         nom_val = Decimal(self.nominal_value_per_share)
         return paid - nom_val
     
-
-if __name__ == "__main__":
-    company = Company.__create__(
-        name="Company Limited", 
-        registered_office="10 Downing Street, London",
-        registered_office_country="England and Wales",
-        company_type="Private limited by shares",
-        sic_code=18535,
-        model_articles=True,
-        custom_articles=False,
-        restricted_articles=False
-    )
-    joris = Person.__create__(
-        title="Mr",
-        name="Joris Bohnson", 
-        address="23 Fleet Street, London, EC4Y 1UJ",
-        former_names = ["Chuck Norris", "Bruce Lee"],
-        date_of_birth = "05/1962",
-    )
-    tonald = Person.__create__(
-        title="Mr",
-        name="Tonald Drump", 
-        address="160 Pennsylvania Ave",
-        date_of_birth = "09/2001",
-    )
-    company.issue_shares(
-        person=joris, 
-        share_class_name="ordinary", 
-        number_of_shares=235, 
-        nominal_value_per_share=Decimal("0.01"), 
-        price_paid_per_share=Decimal("0.01"),
-        votes_per_share=1,
-        entitled_to_dividends=True,
-        entitled_to_capital=True,
-        redeemable=False
-    )
-    company.issue_shares(
-        person=tonald, 
-        share_class_name="ordinary", 
-        number_of_shares=51, 
-        nominal_value_per_share=Decimal("0.01"), 
-        price_paid_per_share=Decimal("121.00"),
-        votes_per_share=1,
-        entitled_to_dividends=True,
-        entitled_to_capital=True,
-        redeemable=False
-    )
-    company.issue_shares(
-        person=joris, 
-        share_class_name="deferred", 
-        number_of_shares=925, 
-        nominal_value_per_share=Decimal("0.01"), 
-        price_paid_per_share=Decimal("0.01"),
-        votes_per_share=1,
-        entitled_to_dividends=True,
-        entitled_to_capital=True,
-        redeemable=False
-    )
-    company.issue_shares(
-        person=joris, 
-        share_class_name="preference", 
-        number_of_shares=2395, 
-        nominal_value_per_share=Decimal("0.01"), 
-        price_paid_per_share=Decimal("2.34"),
-        votes_per_share=1,
-        entitled_to_dividends=True,
-        entitled_to_capital=True,
-        redeemable=False
-    ) 
